@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
 import Footer from "./components/Footer";
+import { CartProvider } from "./context/cartContext";
+import { WishlistProvider } from "./context/wishlistContext";
+
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,15 +30,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+   <CartProvider>
+    <WishlistProvider>
     <html lang="en">
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        
         <Navbar/>
-        <Hero/>
+      
         {children}
+        
         <Footer/>
+      
       </body>
     </html>
+    </WishlistProvider>
+    </CartProvider>
   );
 }

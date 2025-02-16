@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image"; // Import Image component from Next.js
+import Image from "next/image"; 
 
 const Hero = () => {
   return (
@@ -35,7 +35,7 @@ const Hero = () => {
         {/* Right Section */}
         <div className="w-full sm:w-1/2 mt-6 sm:mt-0 sm:ml-[130px] flex justify-center">
           <Image
-            src="/images/Image-1.png" // Path relative to the public folder
+            src="/images/Image-1.png" 
             alt="Product Image"
             width={434} // Adjust width as needed
             height={584} // Adjust height as needed

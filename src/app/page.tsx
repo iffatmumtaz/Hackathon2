@@ -1,15 +1,27 @@
 
-
-
+import React from "react";
+import Hero from "./components/Hero";
+import CompanyLogo from "./components/companyLogo";
 import Categories from "./components/Categories";
+import HotProduct from "./components/hotProducts";
+import OurProduct from "./components/OurProducts";
 
-export default function Home() {
+
+
+export default async function Home() {
+  
+
   return (
     <div>
-      
-      <Categories/>
-      
-      
+      <Hero />
+      <CompanyLogo />
+      <Categories />
+      <HotProduct />
+    <OurProduct/>
+     
+   
+ 
     </div>
   );
 }
+

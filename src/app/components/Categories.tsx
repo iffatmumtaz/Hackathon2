@@ -1,59 +1,70 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { client } from "../../sanity/lib/client";
 
+interface Category {
+  _id: string;
+  title: string;
+  image: string;
+  products: number;
+}
 
 export default function Categories() {
-  const categories = [
-    {
-      name: "Wing Chair",
-      products: "3,584 Products",
-      image: "/images/image-3.jpg",
-      href: "/categories/wing-chair",
-    },
-    {
-      name: "Wooden Chair",
-      products: "157 Products",
-      image: "/images/image-2.jpg",
-      href: "/categories/wooden-chair",
-    },
-    {
-      name: "Desk Chair",
-      products: "154 Products",
-      image: "/images/image-4.png",
-      href: "/categories/desk-chair",
-    },
-  ];
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    // Fetch categories from Sanity
+    client
+      .fetch(
+        `*[_type == "categories"]{
+          _id,
+          title,
+          "image": image.asset->url,
+          products
+        }`
+      )
+      .then((data) => setCategories(data))
+      .catch((error) =>
+        console.error("Error fetching categories from Sanity:", error)
+      );
+  }, []);
 
   return (
-    <section className="w-full px-4 py-[7rem] md:px-6">
+    <section className="w-full px-4 py-[7rem] md:px-6 bg-[#F9FAFB]">
       <div className="mx-auto max-w-7xl">
-        <h2 className="text-3xl font-bold tracking-tight  mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-8 text-center">
           Top Categories
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
             <Link
-              key={category.name}
-              href={"../components/productDectription/discription"}
-              className="group relative overflow-hidden rounded-lg"
+              key={category._id}
+              href={`/categories/${category.title.toLowerCase().replace(/\s+/g, "-")}`}
+              className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="aspect-[4/3] w-full">
+              {/* Image Section */}
+              <div className="relative w-full h-[400px] sm:h-[450px] lg:h-[500px]">
                 <Image
                   src={category.image}
-                  alt={category.name}
-                  className="object-cover transition-transform duration-300 group-hover:scale-150"
+                  alt={category.title}
+                  className="object-cover transition-transform duration-300 group-hover:scale-110"
                   priority
-                  width={400}
-                  height={400}
+                  layout="fill"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent group-hover:from-black/90 transition-colors duration-300">
                 <div className="absolute bottom-0 p-6">
-                  <h3 className="mb-2 font-inter text-xl font-medium text-white">
-                    {category.name}
+                  {/* Category Name */}
+                  <h3 className="mb-2 text-xl md:text-2xl font-semibold text-white">
+                    {category.title}
                   </h3>
-                  <p className="font-inter text-sm text-gray-200">
-                    {category.products}
+                  {/* Product Count */}
+                  <p className="text-sm md:text-base text-gray-200">
+                    {category.products} Products
                   </p>
                 </div>
               </div>
@@ -62,6 +73,5 @@ export default function Categories() {
         </div>
       </div>
     </section>
-   
   );
 }

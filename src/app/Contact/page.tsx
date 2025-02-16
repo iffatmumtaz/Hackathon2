@@ -1,12 +1,59 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Poppins } from "next/font/google";
 import { FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { GoClockFill } from "react-icons/go";
 import ContactSection from "../components/contactSection";
+import { client } from "@/sanity/lib/client";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["500", "600"] });
 
-const page = () => {
+interface FormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+const Page = () => {
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | "">("");
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Send form data to Sanity
+      await client.create({
+        _type: "contactForm",
+        ...formData,
+      });
+
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" }); // Clear form
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="max-w-screen-xl mx-auto mt-24 px-4 sm:px-6">
       <h1 className="font-semibold text-4xl text-center sm:text-3xl">
@@ -66,7 +113,7 @@ const page = () => {
         </div>
 
         <div className="bg-white p-8 w-full sm:w-[635px]">
-          <form action="#" method="POST">
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
                 htmlFor="name"
@@ -79,12 +126,14 @@ const page = () => {
                 id="name"
                 name="name"
                 placeholder="Abc"
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full sm:w-[528.75px] h-[75px] p-6 border border-[#9F9F9F] rounded-[10px] mt-5"
                 required
               />
             </div>
 
-            <div className="mb-4  mt-8">
+            <div className="mb-4 mt-8">
               <label
                 htmlFor="email"
                 className={`${poppins.className} text-[16px] sm:text-[18px] font-medium`}
@@ -96,6 +145,8 @@ const page = () => {
                 id="email"
                 name="email"
                 placeholder="Abc@def.com"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full sm:w-[528.75px] h-[75px] p-6 border border-[#9F9F9F] rounded-[10px] mt-5"
                 required
               />
@@ -113,6 +164,8 @@ const page = () => {
                 id="subject"
                 name="subject"
                 placeholder="This is an optional"
+                value={formData.subject}
+                onChange={handleChange}
                 className="w-full sm:w-[528.75px] h-[75px] p-6 border border-[#9F9F9F] rounded-[10px] mt-5"
               />
             </div>
@@ -128,6 +181,8 @@ const page = () => {
                 id="message"
                 name="message"
                 placeholder="Hi! I’d like to ask about"
+                value={formData.message}
+                onChange={handleChange}
                 className="w-full sm:w-[527px] h-[120px] p-6 border border-[#9F9F9F] rounded-[10px] mt-5"
                 rows={4}
                 required
@@ -137,18 +192,28 @@ const page = () => {
             <div>
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full sm:w-[237px] h-[55px] bg-[#029FAE] border border-[#B88E2F] rounded-[5px] text-white py-3"
               >
-                Submit
+                {isSubmitting ? "Submitting..." : "Submit"}
               </button>
             </div>
+
+            {submitStatus === "success" && (
+              <p className="mt-4 text-green-600">Form submitted successfully!</p>
+            )}
+            {submitStatus === "error" && (
+              <p className="mt-4 text-red-600">
+                Failed to submit form. Please try again.
+              </p>
+            )}
           </form>
         </div>
       </div>
 
-      <ContactSection/>
+      <ContactSection />
     </div>
   );
 };
 
-export default page;
+export default Page;  
