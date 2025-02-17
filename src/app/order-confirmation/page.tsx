@@ -1,10 +1,26 @@
-"use client";
-
+ "use client";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Define the types for order details and cart items
+interface CartItem {
+  _id: string;
+  imageUrl: string;
+  title: string;
+  quantity: number;
+  price: number;
+}
+
+interface OrderDetails {
+  cart: CartItem[];
+  total: number;
+  appliedDiscount: number;
+  paymentMethod: string;
+}
+
 const OrderConfirmation = () => {
-  const [orderDetails, setOrderDetails] = useState<any>(null);
+  const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const router = useRouter();
 
   // Fetch order details from localStorage
@@ -36,10 +52,17 @@ const OrderConfirmation = () => {
           {/* Order Summary */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
-            {orderDetails.cart.map((item: any) => (
+            {orderDetails.cart.map((item) => (
               <div key={item._id} className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
-                  <img src={item.imageUrl} alt={item.title} className="h-12 w-12 object-cover rounded-lg" />
+                  <div className="relative w-12 h-12">
+                    <Image 
+                      src={item.imageUrl} 
+                      alt={item.title} 
+                      fill 
+                      className="object-cover rounded-lg" 
+                    />
+                  </div>
                   <div className="ml-4">
                     <p className="text-sm font-medium">{item.title}</p>
                     <p className="text-xs text-gray-500">Qty: {item.quantity}</p>

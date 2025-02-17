@@ -1,3 +1,4 @@
+ import Image from "next/image";
 import React from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
@@ -5,6 +6,7 @@ import { IoIosHelpCircle } from "react-icons/io";
 import { TiShoppingCart } from "react-icons/ti";
 import { TbSquareRoundedNumber2Filled } from "react-icons/tb";
 import Link from 'next/link';
+
 
 const Navbar = () => {
   return (
@@ -32,7 +34,7 @@ const Navbar = () => {
       <header className="flex justify-between items-center px-4 py-2 bg-slate-300">
         <div className="flex items-center space-x-2">
           <Link href="/">
-            <img src="/images/image.png" alt="logo" className="h-8 w-auto" />
+            <Image src="/images/image.png" alt="logo" width={40} height={40} />
           </Link>
           <span className="text-md font-medium text-gray-700">Comforty</span>
         </div>
@@ -64,7 +66,7 @@ const Navbar = () => {
       <div className="md:hidden flex justify-between items-center px-4 py-2 bg-white shadow-lg">
         <button className="text-xl">☰</button> {/* Hamburger Menu */}
         <Link href="/">
-          <img src="/images/image.png" alt="logo" className="h-8 w-auto" />
+          <Image src="/images/image.png" alt="logo" width={40} height={40} />
         </Link>
         <div className="flex items-center space-x-2">
           <TiShoppingCart className="text-xl" />
@@ -76,4 +78,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

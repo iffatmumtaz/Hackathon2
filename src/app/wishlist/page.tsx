@@ -3,7 +3,7 @@
 import { useWishlist } from "../context/wishlistContext"
 import { FaTrash, FaHeart } from "react-icons/fa"; 
 import Link from "next/link";
-
+import Image from "next/image";
 const Wishlist = () => {
   const { wishlist, removeFromWishlist } = useWishlist();
 
@@ -33,7 +33,7 @@ const Wishlist = () => {
               >
                 {/* Left side: Product image and details */}
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt={item.title}
                     className="h-20 w-20 object-cover rounded-lg"
